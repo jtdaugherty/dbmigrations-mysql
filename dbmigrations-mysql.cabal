@@ -6,9 +6,9 @@ Description:         This package contains the executable to work with
                      is MySQL. See the package dbmigrations for details
                      about the dbmigrations project in general.
 
-                     This particular package only supports MySQL. The
-                     package dbmigrations also supports other database
-                     types, like PostgreSQL and SQLite.
+                     This particular package only supports MySQL.
+                     There are other similar packages for other
+                     databases, for example for PostgreSQL and SQLite.
 
                      Please see MYSQL-AND-TRANSACTIONAL-DDL.TXT
                      for a word of warnings about MySQL and
