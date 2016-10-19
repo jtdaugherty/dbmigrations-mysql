@@ -67,7 +67,7 @@ Executable moo-mysql
   Build-Depends:
     base >= 4 && < 5,
     dbmigrations-mysql,
-    dbmigrations
+    dbmigrations >= 2
 
   if impl(ghc >= 6.12.0)
     ghc-options: -threaded -Wall -fwarn-tabs -funbox-strict-fields
@@ -77,3 +77,28 @@ Executable moo-mysql
 
   Hs-Source-Dirs:  programs
   Main-is:         MooMySQL.hs
+
+test-suite dbmigrations-mysql-tests
+  default-language: Haskell2010
+  type: exitcode-stdio-1.0
+  Build-Depends:
+    base >= 4 && < 5,
+    dbmigrations >= 2,
+    dbmigrations-mysql >= 2,
+    mysql-simple >= 0.2.2.5,
+    mysql >= 0.1.1.8,
+    process >= 1.1,
+    HUnit >= 1.2
+
+  other-modules:
+    BackendTest
+    TestDriver
+
+  if impl(ghc >= 6.12.0)
+    ghc-options: -threaded -Wall -fwarn-tabs -funbox-strict-fields
+                 -fno-warn-unused-do-bind -Wwarn
+  else
+    ghc-options: -threaded -Wall -fwarn-tabs -funbox-strict-fields
+
+  Hs-Source-Dirs:  test
+  Main-is:         TestDriver.hs

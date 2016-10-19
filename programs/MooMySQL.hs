@@ -4,7 +4,7 @@ module Main
 where
 
 import Prelude  hiding (lookup)
-import System.Environment (getArgs, setEnv)
+import System.Environment (getArgs)
 import System.Exit
 
 import Database.Schema.Migrations.Backend.MySQL
