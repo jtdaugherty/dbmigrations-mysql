@@ -50,7 +50,7 @@ tests conn = do
              , isBootstrappedTrueTest
              -- applyMigrationFailure intentionally disabled, see below
              -- , applyMigrationFailure
-             -- , applyMigrationSuccess
+             , applyMigrationSuccess
              , revertMigrationFailure
              , revertMigrationNothing
              , revertMigrationJust
@@ -81,18 +81,18 @@ ignoreSqlExceptions :: IO a -> IO (Maybe a)
 ignoreSqlExceptions act = (act >>= return . Just) `catchSql_`
                           (return Nothing)
 
--- applyMigrationSuccess :: BackendConnection -> IO ()
--- applyMigrationSuccess conn = do
---     let backend = migrationBackend conn
---
---     let m1 = (newMigration "validMigration") { mApply = "CREATE TABLE valid1 (a int); CREATE TABLE valid2 (a int);" }
---
---     -- Apply the migrations, ignore exceptions
---     withTransaction conn $ \conn' -> applyMigration (migrationBackend conn') m1
---
---     -- Check that none of the migrations were installed
---     assertEqual "Installed migrations" ["root", "validMigration"] =<< getMigrations backend
---     assertEqual "Installed tables" ["installed_migrations", "valid1"] =<< getTables conn
+applyMigrationSuccess :: BackendConnection -> IO ()
+applyMigrationSuccess conn = do
+    let backend = migrationBackend conn
+
+    let m1 = (newMigration "validMigration") { mApply = "CREATE TABLE valid1 (a int); CREATE TABLE valid2 (a int);" }
+
+    -- Apply the migrations, ignore exceptions
+    withTransaction conn $ \conn' -> applyMigration (migrationBackend conn') m1
+
+    -- Check that none of the migrations were installed
+    assertEqual "Installed migrations" ["root", "validMigration"] =<< getMigrations backend
+    assertEqual "Installed tables" ["installed_migrations", "valid1", "valid2"] =<< getTables conn
 
 -- |Does a failure to apply a migration imply a transaction rollback?
 --
