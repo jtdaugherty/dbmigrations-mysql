@@ -16,7 +16,6 @@ import Data.Maybe (fromMaybe, listToMaybe)
 import qualified Database.MySQL.Base as Base
 import qualified Database.MySQL.Simple as MySQL
 
-
 -- A slightly hacky connection string parser for MySQL, because mysql-simple
 -- doesn't come with one.
 connectMySQL :: String -> IO Base.Connection
@@ -41,7 +40,6 @@ connectMySQL connectionString =
           <*> pure Nothing
   in MySQL.connect (fromMaybe (error "Invalid connection string. Expected form: host=hostname; user=username; port=portNumber; database=dbname; password=pwd.")
                               connInfo)
-
 
 mysqlBackend :: Connection -> Backend
 mysqlBackend conn =
