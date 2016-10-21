@@ -5,7 +5,7 @@ module Database.Schema.Migrations.Backend.MySQL
 import Control.Monad (when)
 import Database.MySQL.Simple
 import Database.Schema.Migrations.Backend
-       (Backend(..), rootMigrationName)
+       (Backend(..), DatabaseType(MySQL), rootMigrationName)
 import Database.Schema.Migrations.Migration
        (Migration(..), newMigration)
 import Data.List.Split (wordsBy)
@@ -14,7 +14,7 @@ import Data.Time.Clock (getCurrentTime)
 import Data.String (fromString)
 import Data.Maybe (fromMaybe, listToMaybe)
 import qualified Database.MySQL.Base as Base
-import qualified Database.MySQL.Simple as MySQL
+import qualified Database.MySQL.Simple as Simple
 
 -- A slightly hacky connection string parser for MySQL, because mysql-simple
 -- doesn't come with one.
@@ -29,7 +29,7 @@ connectMySQL connectionString =
                                                            [] -> error "impossible"]
       trimlr = takeWhile (not . isSpace) . dropWhile isSpace
       connInfo =
-        MySQL.ConnectInfo
+        Simple.ConnectInfo
           <$> lookup "host" kvs
           <*> pure (read (fromMaybe "3306" (lookup "port" kvs)))
           <*> lookup "user" kvs
@@ -38,12 +38,13 @@ connectMySQL connectionString =
           <*> pure [Base.MultiStatements]
           <*> pure ""
           <*> pure Nothing
-  in MySQL.connect (fromMaybe (error "Invalid connection string. Expected form: host=hostname; user=username; port=portNumber; database=dbname; password=pwd.")
+  in Simple.connect (fromMaybe (error "Invalid connection string. Expected form: host=hostname; user=username; port=portNumber; database=dbname; password=pwd.")
                               connInfo)
 
 mysqlBackend :: Connection -> Backend
 mysqlBackend conn =
-  Backend {isBootstrapped =
+  Backend {getType = MySQL
+          ,isBootstrapped =
              fmap ((Just migrationTableName ==) . listToMaybe . fmap fromOnly)
                   (query conn
                          (fromString "SELECT table_name FROM information_schema.tables WHERE table_name = ? AND table_schema = database()")
