@@ -54,7 +54,7 @@ Library
     base >= 4 && < 5,
     dbmigrations >= 2,
     time >= 1.4,
-    mysql >= 0.1.1.8,
+    mysql >= 0.1.2,
     mysql-simple >= 0.2.2.5,
     split >= 0.2.2
 
