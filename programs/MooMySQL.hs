@@ -15,9 +15,8 @@ main :: IO ()
 main = do
   args <- getArgs
   (_, opts, _) <- procArgs args
-  conf <-
-    loadConfiguration $ _configFilePath opts
-  case conf of
+  loadedConf <- loadConfiguration $ _configFilePath opts
+  case loadedConf of
     Left e -> putStrLn e >> exitFailure
     Right conf -> do
       let connectionString = _connectionString conf
