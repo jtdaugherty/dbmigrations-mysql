@@ -2,7 +2,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 module Main where
 
-import Database.Schema.Migrations.Backend (DatabaseType(MySQL))
 import Database.Schema.Migrations.Backend.MySQL
 import Database.Schema.Migrations.Test.BackendTest as BackendTest
 
@@ -17,8 +16,8 @@ import Test.HUnit
 data MySQLBackendConnection = MySQLConnection MySQLSimple.Connection
 
 instance BackendConnection MySQLBackendConnection where
-    getDatabaseType _ = MySQL
-    migrationBackend _ (MySQLConnection c) = mysqlBackend c
+    supportsTransactionalDDL = const False
+    makeBackend (MySQLConnection c) = mysqlBackend c
     commit (MySQLConnection c) = MySQLSimple.commit c
     withTransaction (MySQLConnection c) transaction =
         MySQLSimple.withTransaction c (transaction (MySQLConnection c))

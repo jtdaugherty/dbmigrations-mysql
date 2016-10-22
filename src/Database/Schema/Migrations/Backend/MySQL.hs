@@ -5,7 +5,7 @@ module Database.Schema.Migrations.Backend.MySQL
 import Control.Monad (when)
 import Database.MySQL.Simple
 import Database.Schema.Migrations.Backend
-       (Backend(..), DatabaseType(MySQL), rootMigrationName)
+       (Backend(..), rootMigrationName)
 import Database.Schema.Migrations.Migration
        (Migration(..), newMigration)
 import Data.List.Split (wordsBy)
@@ -43,8 +43,7 @@ connectMySQL connectionString =
 
 mysqlBackend :: Connection -> Backend
 mysqlBackend conn =
-  Backend {getType = MySQL
-          ,isBootstrapped =
+  Backend {isBootstrapped =
              fmap ((Just migrationTableName ==) . listToMaybe . fmap fromOnly)
                   (query conn
                          (fromString "SELECT table_name FROM information_schema.tables WHERE table_name = ? AND table_schema = database()")
